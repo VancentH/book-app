@@ -6,5 +6,13 @@ WORKDIR /app
 COPY . .
 
 RUN npm install
+RUN npm run build --prod
 
-CMD ["npm", "start"]
+# Stage2
+FROM nginx:alpine
+
+#
+COPY src/nginx/etc/conf.d/default.conf /etc/nginx/conf/default.conf
+
+# 複製Stage1(builder)的目錄至指定位置
+COPY --from=builder /app/dist/book-app /usr/share/nginx/html
