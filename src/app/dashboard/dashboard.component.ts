@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
     this.bookService.getBooks().subscribe(books => this.books = books);
   }
 
-  trackByFn(index: number, item: { bookId: string }) {
-    return item.bookId;
+  trackByFn(index: number, item: { id: string }) {
+    return item.id;
   }
 }
