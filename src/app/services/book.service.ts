@@ -1,8 +1,8 @@
-import { environment } from './../environments/environment.prod';
+import { environment } from '../../environments/environment.prod';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { Book } from './model/book';
+import { Book } from '../models/book';
 import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
