@@ -14,22 +14,16 @@ export class FormComponent implements OnInit {
     author: '',
   };
 
-  constructor(private bookService: BookService) {}
+  constructor(private bookService: BookService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  addBook(): void {
+  addBook(book: Book): void {
     // not empty
-    if (!this.book.bookname) alert('please enter a book name!');
-    if (!this.book.author) alert('please enter a author!');
+    if (!book.bookname) alert('please enter a book name!');
+    if (!book.author) alert('please enter a author!');
 
-    // payload
-    const data = {
-      bookname: this.book.bookname,
-      author: this.book.author,
-    };
-
-    this.bookService.create(data).subscribe({
+    this.bookService.create(book.bookname, book.author).subscribe({
       next: (res) => {
         console.log(res);
         alert('Add a new book successfully.');
@@ -38,6 +32,7 @@ export class FormComponent implements OnInit {
     });
 
     // TODO: refresh the books
+
   }
 
 }

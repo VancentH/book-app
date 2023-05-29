@@ -1,6 +1,6 @@
 import { environment } from '../../environments/environment.prod';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Book } from '../models/book';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -9,10 +9,11 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class BookService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   private baseUrl: string = `${environment.apiUrl}/api/books`;
 
+  // get book list
   getAll(): Observable<Book[]> {
     return this.httpClient.get<Book[]>(this.baseUrl).pipe(
       tap((_) => console.log('fetch books')),
@@ -20,15 +21,24 @@ export class BookService {
     );
   }
 
-  create(book: Partial<Book>): Observable<Book> {
-    return this.httpClient
-      .post<{ book: Book }>(this.baseUrl, { book: book })
+  create(bookname: string, author: string): Observable<Book> {
+    const opts = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    };
+
+    const body = new URLSearchParams();
+    body.set('bookname', bookname);
+    body.set('author', author);
+
+    return this.httpClient.post<Book>(this.baseUrl, body.toString(), opts)
       .pipe(
-        map((data) => data.book),
         catchError(this.handleError<Book>('create'))
       );
   }
 
+  // update a book
   update(book: Partial<Book>): Observable<Book> {
     return this.httpClient
       .put<{ book: Book }>(`${this.baseUrl}`, { book: book })
