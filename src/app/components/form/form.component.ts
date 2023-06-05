@@ -23,10 +23,9 @@ export class FormComponent implements OnInit {
     if (!book.bookname) alert('please enter a book name!');
     if (!book.author) alert('please enter a author!');
 
-    this.bookService.create(book.bookname, book.author).subscribe({
+    this.bookService.create(book).subscribe({
       next: (res) => {
-        console.log(res);
-        alert('Add a new book successfully.');
+        alert('Create a new book successfully.');
       },
       error: (e) => console.error(e),
     });

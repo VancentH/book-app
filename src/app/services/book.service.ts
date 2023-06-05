@@ -1,10 +1,6 @@
 import { environment } from '../../environments/environment.prod';
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-=======
 import { HttpClient, HttpHeaders } from '@angular/common/http';
->>>>>>> 52e1f09bce4e7c7db7fc52bc578b66e38a7654e8
 import { Observable, of } from 'rxjs';
 import { Book } from '../models/book';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -15,16 +11,17 @@ import { catchError, map, tap } from 'rxjs/operators';
 export class BookService {
   constructor(private httpClient: HttpClient) { }
 
-  private baseUrl: string = `${environment.apiUrl}/api/v1/books`;
+  private baseUrl: string = `${environment.apiUrl}/api/books`;
 
   // get book list
   getAll(): Observable<Book[]> {
     return this.httpClient.get<Book[]>(this.baseUrl).pipe(
       tap((_) => console.log('fetch books')),
-      catchError(this.handleError<Book[]>('getAll', []))
+      catchError(this.handleError<any>('getAll'))
     );
   }
 
+  // create a new book
   create(book: Partial<Book>): Observable<Book[]> {
     const body = `bookname=${book.bookname}&author=${book.author}`;
     const httpOptions = {
@@ -33,23 +30,26 @@ export class BookService {
       })
     };
 
-    return this.httpClient.post(this.baseUrl, body, httpOptions).pipe(
-      tap((data) => console.log(data)),
-      map((data) => data as Book[]),
+    return this.httpClient.post<Book>(this.baseUrl, body, httpOptions).pipe(
       catchError(this.handleError<any>('create'))
     );
   }
 
   // update a book
-  update(book: Partial<Book>): Observable<Book> {
+  update(book: Partial<Book>): Observable<any> {
     return this.httpClient
-      .put<{ book: Book }>(`${this.baseUrl}`, { book: book })
+      .put<{ book: Book }>(`${this.baseUrl}`,
+        {
+          id: book.id,
+          bookname: book.bookname,
+          author: book.author
+        })
       .pipe(
-        map((data) => data.book),
-        catchError(this.handleError<Book>('update'))
+        catchError(this.handleError<Number>('update'))
       );
   }
 
+  // remove a book
   delete(id: string): Observable<void> {
     return this.httpClient
       .delete<void>(`${this.baseUrl}/${id}`)

@@ -9,24 +9,13 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  books: Book[] = [
-    {
-      id: '1',
-      bookname: '1',
-      author: '1',
-    },
-    {
-      id: '2',
-      bookname: '2',
-      author: '2',
-    },
-  ];
+  books: Book[] = [];
 
   enableUpdate: boolean = false;
-  idTobeUpdate: string = '';
+  updateId: string = '';
   destroy$ = new Subject<void>();
 
-  constructor(private bookService: BookService) {}
+  constructor(private bookService: BookService) { }
 
   ngOnInit(): void {
     this.getBooks();
@@ -38,19 +27,18 @@ export class DashboardComponent implements OnInit {
   }
 
   getBooks(): void {
-    // this.bookService.getAll().subscribe((books) => (this.books = books));
+    this.bookService.getAll().subscribe((books) => (this.books = books));
   }
 
   deleteBook(book: Book): void {
-    // conform dialog
-    const result = confirm(`Remove item id: ${book.id} ?`);
+    const result = confirm(`Remove book: ${book.bookname} ?`);
     if (result) {
       this.bookService
-        .delete(book.id) // TODO: handle delete error
+        .delete(book.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
           this.books = this.books.filter((item) => item !== book);
-          alert('Remove successfully');
+          alert('Remove successfully.');
         });
     }
   }
@@ -58,13 +46,13 @@ export class DashboardComponent implements OnInit {
   updateBook(book: Book): void {
     console.log('cancelUpdate');
     this.enableUpdate = true;
-    this.idTobeUpdate = book.id;
+    this.updateId = book.id;
   }
 
   cancelUpdate(): void {
     console.log('cancelUpdate');
     this.enableUpdate = false;
-    this.idTobeUpdate = '';
+    this.updateId = '';
 
   }
 
@@ -81,18 +69,20 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    console.log('successfully');
-    return;
     this.bookService
       .update(book)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.getBooks();
-        this.enableUpdate = false;
-        this.idTobeUpdate = '';
-        alert('Update successfully');
+      .subscribe({
+        next: (res) => {
+          this.getBooks();
+          this.enableUpdate = false;
+          this.updateId = '';
+          alert('Update successfully.');
+        },
+        error: (e) => console.error(e)
       });
   }
+
 
   trackByFn(index: number, item: { id: string }) {
     return item.id;

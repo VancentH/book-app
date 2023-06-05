@@ -1,5 +1,5 @@
 <main>
-  <div class="h-screen w-full bg-gray-200 py-6 sm:px-6 lg:px-8">
+  <div class="w-full bg-gray-200 py-6 sm:px-6 lg:px-8">
     <div class="relative flex items-center justify-center overflow-x-auto">
       <table class="text-md w-auto text-left text-gray-500">
         <thead class="bg-gray-100 text-base uppercase text-gray-700">
@@ -16,7 +16,10 @@
           >
             <td class="whitespace-normal px-6 py-4">
               <div
-                *ngIf="enableUpdate && book.id === idTobeUpdate; else readonlyBookname"
+                *ngIf="
+                  enableUpdate && book.id === updateId;
+                  else readonlyBookname
+                "
               >
                 <input
                   [value]="book.bookname"
@@ -32,7 +35,7 @@
             <td class="px-6 py-4">
               <div
                 *ngIf="
-                  enableUpdate && book.id === idTobeUpdate;
+                  enableUpdate && book.id === updateId;
                   else readonlyAuthor
                 "
               >
@@ -51,7 +54,7 @@
               <div class="flex flex-col items-center gap-1.5 sm:flex-row">
                 <ng-container
                   *ngIf="
-                    enableUpdate && book.id === idTobeUpdate;
+                    enableUpdate && book.id === updateId;
                     else updateTemplate
                   "
                 >
