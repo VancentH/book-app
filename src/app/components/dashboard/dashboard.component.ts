@@ -10,12 +10,17 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class DashboardComponent implements OnInit {
   books: Book[] = [];
+  storeTempBook: Book = {
+    id: '',
+    author: '',
+    bookname: '',
+  };
 
   enableUpdate: boolean = false;
   updateId: string = '';
   destroy$ = new Subject<void>();
 
-  constructor(private bookService: BookService) { }
+  constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
     this.getBooks();
@@ -44,22 +49,18 @@ export class DashboardComponent implements OnInit {
   }
 
   updateBook(book: Book): void {
-    console.log('cancelUpdate');
+    if (this.updateId !== book.id) this.getBooks();
     this.enableUpdate = true;
     this.updateId = book.id;
   }
 
   cancelUpdate(): void {
-    console.log('cancelUpdate');
     this.enableUpdate = false;
     this.updateId = '';
-
+    this.getBooks(); // refresh the book list
   }
 
   confirmUpdate(book: Book): void {
-    console.log('confirmUpdate');
-    console.log(book);
-
     if (!book.bookname) {
       alert('Book name must not be empty.');
       return;
@@ -74,15 +75,15 @@ export class DashboardComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
+          if (res === 1) alert('Update successfully.');
+          else alert('Update failed.');
           this.getBooks();
           this.enableUpdate = false;
           this.updateId = '';
-          alert('Update successfully.');
         },
-        error: (e) => console.error(e)
+        error: (e) => console.error(e),
       });
   }
-
 
   trackByFn(index: number, item: { id: string }) {
     return item.id;
