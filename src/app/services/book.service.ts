@@ -1,6 +1,6 @@
 import { environment } from '../../environments/environment.prod';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Book } from '../models/book';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -9,57 +9,45 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class BookService {
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   private baseUrl: string = `${environment.apiUrl}/api/books`;
 
   // get book list
   getAll(): Observable<Book[]> {
-    return this.httpClient.get<Book[]>(this.baseUrl).pipe(
-      tap((_) => console.log('fetch books')),
-      catchError(this.handleError<any>('getAll'))
-    );
+    return this.httpClient.get<Book[]>(this.baseUrl);
   }
 
+  // TODO: add this feature
+  // get a single book
+  // get(id: number): Observable<Book> {
+  //   return this.httpClient.get<Book>(this.baseUrl)
+  // }
+
   // create a new book
-  create(book: Partial<Book>): Observable<Book[]> {
-    const body = `bookname=${book.bookname}&author=${book.author}`;
+  create(book: Partial<Book>): Observable<Book> {
+    const params = new HttpParams()
+      .set('bookname', book.bookname || '')
+      .set('author', book.author || '');
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
-      })
+      }),
     };
-
-    return this.httpClient.post<Book>(this.baseUrl, body, httpOptions).pipe(
-      catchError(this.handleError<any>('create'))
-    );
+    return this.httpClient.post<Book>(this.baseUrl, params, httpOptions);
   }
 
   // update a book
-  update(book: Partial<Book>): Observable<any> {
-    return this.httpClient
-      .put<{ book: Book }>(`${this.baseUrl}`,
-        {
-          id: book.id,
-          bookname: book.bookname,
-          author: book.author
-        })
-      .pipe(
-        catchError(this.handleError<Number>('update'))
-      );
+  update(book: Partial<Book>): Observable<Number> {
+    const params = new HttpParams()
+      .set('bookname', book.bookname || '')
+      .set('author', book.author || '')
+      .set('id', book.id || '');
+    return this.httpClient.put<Number>(this.baseUrl, {}, { params });
   }
 
   // remove a book
   delete(id: string): Observable<void> {
-    return this.httpClient
-      .delete<void>(`${this.baseUrl}/${id}`)
-      .pipe(catchError(this.handleError<void>('delete')));
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
+    return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
