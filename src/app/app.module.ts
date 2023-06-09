@@ -9,6 +9,9 @@ import { FormsModule } from '@angular/forms'; //Import FormsModule
 import { HttpClientModule } from '@angular/common/http';
 import { FormComponent } from './components/form/form.component';
 
+import { StoreModule } from '@ngrx/store';
+import { booksReducer } from './state/books.reducer';
+import { collectionReducer } from './state/collection.reducer';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,8 @@ import { FormComponent } from './components/form/form.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({ books: booksReducer, collection: collectionReducer }),
   ],
   providers: [],
   bootstrap: [AppComponent]
