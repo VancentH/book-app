@@ -1,4 +1,3 @@
-// Books Actions
 import { createActionGroup, props } from '@ngrx/store';
 import { Book } from '../book-list/books.model';
 

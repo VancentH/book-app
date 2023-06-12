@@ -13,12 +13,17 @@ import { StoreModule } from '@ngrx/store';
 import { booksReducer } from './state/books.reducer';
 import { collectionReducer } from './state/collection.reducer';
 
+import { BookListComponent } from './book-list/book-list.component';
+import { BookCollectionComponent } from './book-collection/book-collection.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     DashboardComponent,
-    FormComponent
+    FormComponent,
+    BookListComponent,
+    BookCollectionComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,6 +32,6 @@ import { collectionReducer } from './state/collection.reducer';
     StoreModule.forRoot({ books: booksReducer, collection: collectionReducer }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
