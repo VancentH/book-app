@@ -10,11 +10,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormComponent } from './components/form/form.component';
 
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { booksReducer } from './state/books.reducer';
-import { collectionReducer } from './state/collection.reducer';
-
-import { BookListComponent } from './book-list/book-list.component';
-import { BookCollectionComponent } from './book-collection/book-collection.component';
+import { BookEffects } from './state/books.effects';
 
 @NgModule({
   declarations: [
@@ -22,14 +20,13 @@ import { BookCollectionComponent } from './book-collection/book-collection.compo
     HeaderComponent,
     DashboardComponent,
     FormComponent,
-    BookListComponent,
-    BookCollectionComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    StoreModule.forRoot({ books: booksReducer, collection: collectionReducer }),
+    StoreModule.forRoot({ books: booksReducer }),
+    EffectsModule.forRoot([BookEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent],

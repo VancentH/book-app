@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Book } from './models/book';
 
-import { selectBookCollection, selectBooks } from './state/books.selector';
+import { BookService } from './services/book.service';
 import { BooksActions, BooksApiActions } from './state/books.actions';
-import { GoogleBooksService } from './book-list/books.service';
+import { selectsBook } from './state/books.selector';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,26 +13,72 @@ import { GoogleBooksService } from './book-list/books.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  constructor(
+    private bookService: BookService,
+    private store: Store<{ books: Book[] }>
+  ) {}
+
   title = 'book-app';
+  books$: Observable<Book[]> = this.store.select((state) => state.books);
+  enableUpdate: boolean = false;
+  updateId: string = '';
 
-  books$ = this.store.select(selectBooks);
-  bookCollection$ = this.store.select(selectBookCollection);
+  onUpdate(book: Book): void {
+    if (!book.bookname) {
+      alert('Book name must not be empty.');
+      return;
+    }
+    if (!book.author) {
+      alert('Author must not be empty.');
+      return;
+    }
 
-  onAdd(bookId: string) {
-    this.store.dispatch(BooksActions.addBook({ bookId }));
+    console.log(
+      '🚀 ~ file: app.component.ts:28 ~ AppComponent ~ onUpdate ~ book:',
+      book
+    );
+
+    this.bookService.update(book).subscribe({
+      next: (res) => {
+        if (res === 1) {
+          alert('Update successfully.');
+          this.store.dispatch(BooksApiActions.updateBook(book));
+        } else {
+          alert('Update failed.');
+        }
+        // this.getBooks();
+        // this.enableUpdate = false;
+        // this.updateId = '';
+      },
+      error: (e) => console.error(e),
+    });
   }
 
-  onRemove(bookId: string) {
-    this.store.dispatch(BooksActions.removeBook({ bookId }));
+  onRemove(book: Book): void {
+    const result = confirm(`Remove book: ${book.bookname} ?`);
+    if (result) {
+      this.bookService.delete(book.id).subscribe(() => {
+        this.store.dispatch(BooksApiActions.removeBook({ id: book.id }));
+        //this.getBookList();
+        alert('Remove successfully.');
+      });
+    }
   }
 
-  constructor(private booksService: GoogleBooksService, private store: Store) {}
+  // getBookList(): void {
+  //   this.bookService
+  //     .getAll()
+  //     .subscribe((books) =>
+  //       this.store.dispatch(BooksApiActions.getBookList({ books }))
+  //     );
+  // }
 
   ngOnInit() {
-    this.booksService
-      .getBooks()
-      .subscribe((books) =>
-        this.store.dispatch(BooksApiActions.retrievedBookList({ books }))
-      );
+    // this.bookService.getAll().subscribe((books) =>
+    // this.store.dispatch(BooksApiActions.getBookList({ books }))
+    this.store.dispatch({ type: '[Book] Load Books' });
+    // );
+console.log(this.store.select((state) => state.books))
+    // this.getBookList();
   }
 }

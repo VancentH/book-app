@@ -1,7 +1,8 @@
 <main>
+  {{ books }}
   <div class="w-full bg-gray-200 py-6 sm:px-6 lg:px-8">
     <div class="relative flex items-center justify-center overflow-x-auto">
-      <table class="text-md w-auto text-left text-gray-500">
+      <table class="text-md w-auto text-left text-gray-700">
         <thead class="bg-gray-100 text-base uppercase text-gray-700">
           <tr>
             <th scope="col" class="px-6 py-3">Book</th>
@@ -70,7 +71,7 @@
                   </div>
                   <div class="flex-initial">
                     <button
-                      (click)="confirmUpdate(book)"
+                      (click)="update.emit(book)"
                       type="button"
                       class="rounded-sm bg-blue-400 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     >
@@ -92,7 +93,7 @@
                 </ng-template>
                 <div class="flex-initial">
                   <button
-                    (click)="deleteBook(book)"
+                    (click)="remove.emit(book)"
                     type="button"
                     class="rounded-sm bg-red-400 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-100"
                   >

@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { BookService } from '../../services/book.service';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { Book } from '../../models/book';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,47 +8,38 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  books: Book[] = [];
-  storeTempBook: Book = {
-    id: '',
-    author: '',
-    bookname: '',
-  };
+  @Input() books: Book[] = [];
+  @Output() update = new EventEmitter<Book>();
+  @Output() remove = new EventEmitter<Book>();
 
   enableUpdate: boolean = false;
   updateId: string = '';
   destroy$ = new Subject<void>();
 
-  constructor(private bookService: BookService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.getBooks();
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  getBooks(): void {
-    this.bookService.getAll().subscribe((books) => (this.books = books));
-  }
-
-  deleteBook(book: Book): void {
-    const result = confirm(`Remove book: ${book.bookname} ?`);
-    if (result) {
-      this.bookService
-        .delete(book.id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(() => {
-          this.books = this.books.filter((item) => item !== book);
-          alert('Remove successfully.');
-        });
-    }
-  }
+  // deleteBook(book: Book): void {
+  //   const result = confirm(`Remove book: ${book.bookname} ?`);
+  //   if (result) {
+  //     this.bookService
+  //       .delete(book.id)
+  //       .pipe(takeUntil(this.destroy$))
+  //       .subscribe(() => {
+  //         // this.books = this.books.filter((item) => item !== book);
+  //         alert('Remove successfully.');
+  //       });
+  //   }
+  // }
 
   updateBook(book: Book): void {
-    if (this.updateId !== book.id) this.getBooks();
+    // if (this.updateId !== book.id) this.getBooks();
     this.enableUpdate = true;
     this.updateId = book.id;
   }
@@ -57,33 +47,33 @@ export class DashboardComponent implements OnInit {
   cancelUpdate(): void {
     this.enableUpdate = false;
     this.updateId = '';
-    this.getBooks(); // refresh the book list
+    // this.getBooks(); // refresh the book list
   }
 
-  confirmUpdate(book: Book): void {
-    if (!book.bookname) {
-      alert('Book name must not be empty.');
-      return;
-    }
-    if (!book.author) {
-      alert('Author must not be empty.');
-      return;
-    }
+  // confirmUpdate(book: Book): void {
+  //   if (!book.bookname) {
+  //     alert('Book name must not be empty.');
+  //     return;
+  //   }
+  //   if (!book.author) {
+  //     alert('Author must not be empty.');
+  //     return;
+  //   }
 
-    this.bookService
-      .update(book)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
-          if (res === 1) alert('Update successfully.');
-          else alert('Update failed.');
-          this.getBooks();
-          this.enableUpdate = false;
-          this.updateId = '';
-        },
-        error: (e) => console.error(e),
-      });
-  }
+  //   this.bookService
+  //     .update(book)
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (res) => {
+  //         if (res === 1) alert('Update successfully.');
+  //         else alert('Update failed.');
+  //         // this.getBooks();
+  //         this.enableUpdate = false;
+  //         this.updateId = '';
+  //       },
+  //       error: (e) => console.error(e),
+  //     });
+  // }
 
   trackByFn(index: number, item: { id: string }) {
     return item.id;
