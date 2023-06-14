@@ -1,6 +1,7 @@
 <app-header></app-header>
 <app-dashboard
-  [books]="(books$ | async)!"
   (update)="onUpdate($event)"
   (remove)="onRemove($event)"
 ></app-dashboard>
+
+<!-- [books]="(books$ | async)!" -->

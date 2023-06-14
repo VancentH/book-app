@@ -1,5 +1,4 @@
 <main>
-  {{ books }}
   <div class="w-full bg-gray-200 py-6 sm:px-6 lg:px-8">
     <div class="relative flex items-center justify-center overflow-x-auto">
       <table class="text-md w-auto text-left text-gray-700">
@@ -13,7 +12,7 @@
         <tbody>
           <tr
             class="border-b bg-white"
-            *ngFor="let book of books; index as i; trackBy: trackByFn"
+            *ngFor="let book of books$ | async; index as i; trackBy: trackByFn"
           >
             <td class="whitespace-normal px-6 py-4">
               <div

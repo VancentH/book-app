@@ -1,6 +1,12 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+
+import { Store } from '@ngrx/store';
+import * as fromReducer from '../../reducers/books.reducer';
+import * as fromActions from '../../actions/books.actions';
+import * as fromSelector from '../../selectors/books.selector';
+import { BookState } from '../../reducers/app.states';
 import { Book } from '../../models/book';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +14,9 @@ import { Subject } from 'rxjs';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  @Input() books: Book[] = [];
+  books$: Observable<Book[]>;
+  message$: Observable<string>;
+
   @Output() update = new EventEmitter<Book>();
   @Output() remove = new EventEmitter<Book>();
 
@@ -16,9 +24,14 @@ export class DashboardComponent implements OnInit {
   updateId: string = '';
   destroy$ = new Subject<void>();
 
-  constructor() {}
+  constructor(private store: Store<{ books: Book[] }>) {
+    this.books$ = this.store.select(fromSelector.getBooks);
+    this.message$ = this.store.select(fromSelector.getMessage);
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.store.dispatch(fromActions.GetBookListAction());
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

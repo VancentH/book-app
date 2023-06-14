@@ -3,9 +3,8 @@ import { Store } from '@ngrx/store';
 import { Book } from './models/book';
 
 import { BookService } from './services/book.service';
-import { BooksActions, BooksApiActions } from './state/books.actions';
-import { selectsBook } from './state/books.selector';
 import { Observable } from 'rxjs';
+import * as fromActions from './actions/books.actions';
 
 @Component({
   selector: 'app-root',
@@ -38,30 +37,30 @@ export class AppComponent {
       book
     );
 
-    this.bookService.update(book).subscribe({
-      next: (res) => {
-        if (res === 1) {
-          alert('Update successfully.');
-          this.store.dispatch(BooksApiActions.updateBook(book));
-        } else {
-          alert('Update failed.');
-        }
-        // this.getBooks();
-        // this.enableUpdate = false;
-        // this.updateId = '';
-      },
-      error: (e) => console.error(e),
-    });
+    // this.bookService.update(book).subscribe({
+    //   next: (res) => {
+    //     if (res === 1) {
+    //       alert('Update successfully.');
+    //       this.store.dispatch(BooksApiActions.updateBook(book));
+    //     } else {
+    //       alert('Update failed.');
+    //     }
+    //     // this.getBooks();
+    //     // this.enableUpdate = false;
+    //     // this.updateId = '';
+    //   },
+    //   error: (e) => console.error(e),
+    // });
   }
 
   onRemove(book: Book): void {
     const result = confirm(`Remove book: ${book.bookname} ?`);
     if (result) {
-      this.bookService.delete(book.id).subscribe(() => {
-        this.store.dispatch(BooksApiActions.removeBook({ id: book.id }));
-        //this.getBookList();
-        alert('Remove successfully.');
-      });
+      // this.bookService.delete(book.id).subscribe(() => {
+      this.store.dispatch(fromActions.RemoveBookAction({ payload: book.id }));
+      //this.getBookList();
+      //   alert('Remove successfully.');
+      // });
     }
   }
 
@@ -76,9 +75,8 @@ export class AppComponent {
   ngOnInit() {
     // this.bookService.getAll().subscribe((books) =>
     // this.store.dispatch(BooksApiActions.getBookList({ books }))
-    this.store.dispatch({ type: '[Book] Load Books' });
+    // this.store.dispatch({ type: '[Book] Load Books' });
     // );
-console.log(this.store.select((state) => state.books))
     // this.getBookList();
   }
 }
