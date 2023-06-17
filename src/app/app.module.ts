@@ -11,8 +11,8 @@ import { FormComponent } from './components/form/form.component';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { BooksEffects } from './effects/books.effects';
-import { reducers } from './reducers/reducers';
+import { BooksEffects } from './state/books.effects';
+import { booksReducer } from './state/books.reducers';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { reducers } from './reducers/reducers';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot({ books: booksReducer }),
     EffectsModule.forRoot([BooksEffects]),
   ],
   providers: [],

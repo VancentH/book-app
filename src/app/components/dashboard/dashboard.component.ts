@@ -2,11 +2,10 @@ import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { Store } from '@ngrx/store';
-import * as fromReducer from '../../reducers/books.reducer';
-import * as fromActions from '../../actions/books.actions';
-import * as fromSelector from '../../selectors/books.selector';
-import { BookState } from '../../reducers/app.states';
 import { Book } from '../../models/book';
+import { loadBookListAction } from '../../state/books.actions';
+import { selectAllBooks } from 'src/app/state/books.selectors';
+import { AppState } from 'src/app/state/app.state';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,8 +13,7 @@ import { Book } from '../../models/book';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  books$: Observable<Book[]>;
-  message$: Observable<string>;
+  books$ = this.store.select(selectAllBooks);
 
   @Output() update = new EventEmitter<Book>();
   @Output() remove = new EventEmitter<Book>();
@@ -24,13 +22,10 @@ export class DashboardComponent implements OnInit {
   updateId: string = '';
   destroy$ = new Subject<void>();
 
-  constructor(private store: Store<{ books: Book[] }>) {
-    this.books$ = this.store.select(fromSelector.getBooks);
-    this.message$ = this.store.select(fromSelector.getMessage);
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.store.dispatch(fromActions.GetBookListAction());
+    this.store.dispatch(loadBookListAction());
   }
 
   ngOnDestroy(): void {

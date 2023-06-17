@@ -15,7 +15,7 @@ export const LOAD_BOOK_SUCCESS = '[Book] load book success';
 // CRUD actions
 export const addBookAction = createAction(
   ADD_BOOK_ACTION,
-  props<{ book: Book[] }>()
+  props<{ book: Book }>()
 );
 export const addBookSuccess = createAction(
   ADD_BOOK_SUCCESS,
@@ -45,3 +45,5 @@ export const loadBookListSuccess = createAction(
   LOAD_BOOK_SUCCESS,
   props<{ books: Book[] }>()
 );
+
+export const dummyAction = createAction('[dummy action]');

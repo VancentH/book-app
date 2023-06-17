@@ -4,7 +4,6 @@ import { Book } from './models/book';
 
 import { BookService } from './services/book.service';
 import { Observable } from 'rxjs';
-import * as fromActions from './actions/books.actions';
 
 @Component({
   selector: 'app-root',
@@ -57,7 +56,7 @@ export class AppComponent {
     const result = confirm(`Remove book: ${book.bookname} ?`);
     if (result) {
       // this.bookService.delete(book.id).subscribe(() => {
-      this.store.dispatch(fromActions.RemoveBookAction({ payload: book.id }));
+      // this.store.dispatch(fromActions.RemoveBookAction({ payload: book.id }));
       //this.getBookList();
       //   alert('Remove successfully.');
       // });
