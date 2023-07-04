@@ -1,4 +1,4 @@
-import { Book } from '../models/book';
+import { Book } from '../../shared/models/book';
 import { createAction, props } from '@ngrx/store';
 
 // CRUD operations

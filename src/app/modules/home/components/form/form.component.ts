@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { addBookAction } from 'src/app/state/books.actions';
+import { addBookAction } from 'src/app/core/state/books.actions';
 
 @Component({
   selector: 'app-form',

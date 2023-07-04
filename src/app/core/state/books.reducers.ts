@@ -9,7 +9,7 @@ import {
   loadBookListAction,
 } from './books.actions';
 import { createReducer, on } from '@ngrx/store';
-import { Book } from '../models/book';
+import { Book } from '../../shared/models/book';
 
 export interface BookState {
   books: Book[];

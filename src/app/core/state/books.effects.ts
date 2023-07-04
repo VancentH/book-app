@@ -1,6 +1,6 @@
 import { Store } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import { Book } from '../models/book';
+import { Book } from '../../shared/models/book';
 import { map, switchMap, catchError, mergeMap } from 'rxjs/operators';
 import {
   addBookAction,
@@ -12,7 +12,7 @@ import {
   loadBookListAction,
   loadBookListSuccess,
 } from './books.actions';
-import { BookService } from '../services/book.service';
+import { BookService } from '../service/book.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { from, EMPTY } from 'rxjs';

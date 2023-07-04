@@ -1,13 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Store } from '@ngrx/store';
-import { Book } from '../../models/book';
+import { Book } from '../../../../shared/models/book';
 import {
   loadBookListAction,
   deleteBookAction,
   updateBookAction,
-} from '../../state/books.actions';
-import { AppState } from 'src/app/state/app.state';
+} from '../../../../core/state/books.actions';
+import { AppState } from 'src/app/core/state/app.state';
 
 @Component({
   selector: 'app-dashboard',
