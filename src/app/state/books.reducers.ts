@@ -26,24 +26,12 @@ export const initialState: BookState = {
 export const booksReducer = createReducer(
   // Supply the initial state
   initialState,
-  // Trigger add the book to the books array
-  // on(addBookAction, (state, { book }) => ({
-  //   ...state,
-  //   status: <const>'pending',
-  //   books: [...state.books, book],
-  // })),
   // Add the new book to the books array
   on(addBookSuccess, (state, { book }) => ({
     ...state,
     status: <const>'success',
     books: [...state.books, book],
   })),
-  // Trigger remove the book from the books array
-  // on(deleteBookAction, (state, { id }) => ({
-  //   ...state,
-  //   status: <const>'pending',
-  //   books: state.books.filter((book) => book.id !== id),
-  // })),
   // remove the book from the books array
   on(deleteBookSuccess, (state, { id }) => ({
     ...state,
