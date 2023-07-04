@@ -27,11 +27,11 @@ export const booksReducer = createReducer(
   // Supply the initial state
   initialState,
   // Trigger add the book to the books array
-  on(addBookAction, (state, { book }) => ({
-    ...state,
-    status: <const>'pending',
-    books: [...state.books, book],
-  })),
+  // on(addBookAction, (state, { book }) => ({
+  //   ...state,
+  //   status: <const>'pending',
+  //   books: [...state.books, book],
+  // })),
   // Add the new book to the books array
   on(addBookSuccess, (state, { book }) => ({
     ...state,
@@ -39,16 +39,16 @@ export const booksReducer = createReducer(
     books: [...state.books, book],
   })),
   // Trigger remove the book from the books array
-  on(deleteBookAction, (state, { id }) => ({
-    ...state,
-    status: <const>'pending',
-    books: state.books.filter((book) => book.id === id),
-  })),
+  // on(deleteBookAction, (state, { id }) => ({
+  //   ...state,
+  //   status: <const>'pending',
+  //   books: state.books.filter((book) => book.id !== id),
+  // })),
   // remove the book from the books array
   on(deleteBookSuccess, (state, { id }) => ({
     ...state,
     status: <const>'success',
-    books: state.books.filter((book) => book.id === id),
+    books: state.books.filter((book) => book.id !== id),
   })),
   // Trigger loading the books
   on(loadBookListAction, (state) => ({ ...state, status: <const>'loading' })),
@@ -57,10 +57,13 @@ export const booksReducer = createReducer(
     ...state,
     status: <const>'success',
     books: books,
+  })),
+  // Handle successfully updated books
+  on(updateBookSuccess, (state, { book }) => ({
+    ...state,
+    status: <const>'success',
+    books: state.books.map((oldbook) => {
+      return book.id === oldbook.id ? book : oldbook;
+    }),
   }))
 );
-
-// TODO:
-// on(updateBookSuccess, (state, action) => {
-//   return booksAdapter.updateOne(action.book, state);
-// })

@@ -12,7 +12,7 @@
         <tbody>
           <tr
             class="border-b bg-white"
-            *ngFor="let book of books$ | async; index as i; trackBy: trackByFn"
+            *ngFor="let book of books; index as i; trackBy: trackByFn"
           >
             <td class="whitespace-normal px-6 py-4">
               <div
@@ -22,7 +22,7 @@
                 "
               >
                 <input
-                  [(ngModel)]="book.bookname"
+                  [(ngModel)]="updatedBook.bookname"
                   id="bookname"
                   name="bookname"
                   type="text"
@@ -40,7 +40,7 @@
                 "
               >
                 <input
-                  [(ngModel)]="book.author"
+                  [(ngModel)]="updatedBook.author"
                   id="author"
                   name="author"
                   type="text"
@@ -70,7 +70,7 @@
                   </div>
                   <div class="flex-initial">
                     <button
-                      (click)="update.emit(book)"
+                      (click)="confirmUpdate(updatedBook)"
                       type="button"
                       class="rounded-sm bg-blue-400 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     >
@@ -92,7 +92,7 @@
                 </ng-template>
                 <div class="flex-initial">
                   <button
-                    (click)="remove.emit(book)"
+                    (click)="deleteBook(book)"
                     type="button"
                     class="rounded-sm bg-red-400 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-100"
                   >

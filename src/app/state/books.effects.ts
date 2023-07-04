@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 import { Book } from '../models/book';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, mergeMap } from 'rxjs/operators';
 import {
   addBookAction,
   addBookSuccess,
@@ -20,11 +20,7 @@ import { AppState } from './app.state';
 
 @Injectable()
 export class BooksEffects {
-  constructor(
-    private actions$: Actions,
-    private store: Store<AppState>,
-    private BookService: BookService
-  ) {}
+  constructor(private actions$: Actions, private BookService: BookService) {}
 
   loadBooks$ = createEffect(() =>
     this.actions$.pipe(
@@ -38,18 +34,40 @@ export class BooksEffects {
     )
   );
 
-  // );
+  removeBook$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteBookAction),
+      switchMap((action) =>
+        this.BookService.delete(action.id).pipe(
+          map(() => deleteBookSuccess({ id: action.id })),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  );
 
-  // removeBook$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(bookActions.RemoveBookAction),
-  //     map((action) => action.payload),
-  //     switchMap((id) =>
-  //       this.bookService.delete(id).pipe(
-  //         map(() => bookActions.RemoveBookSuccessAction()),
-  //         catchError(() => EMPTY)
-  //       )
-  //     )
-  //   )
-  // );
+  addBook$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addBookAction),
+      mergeMap((action) =>
+        this.BookService.create(action.book).pipe(
+          map((book) => {
+            const newbook = { ...action.book, id: book.id };
+            return addBookSuccess({ book: newbook });
+          })
+        )
+      )
+    )
+  );
+
+  updateBook$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateBookAction),
+      switchMap((action) =>
+        this.BookService.update(action.book).pipe(
+          map((book) => updateBookSuccess({ book: action.book }))
+        )
+      )
+    )
+  );
 }

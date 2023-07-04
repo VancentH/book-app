@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Book } from '../../models/book';
 
-import { BookService } from '../../services/book.service';
-// import { BooksApiActions } from '../../actions/books.actions';
+import { addBookAction } from 'src/app/state/books.actions';
 
 @Component({
   selector: 'app-form',
@@ -11,31 +9,34 @@ import { BookService } from '../../services/book.service';
   styleUrls: ['./form.component.css'],
 })
 export class FormComponent implements OnInit {
-  book: Book = {
-    id: '',
-    bookname: '',
-    author: '',
-  };
+  bookname: string = '';
+  author: string = '';
 
-  constructor(private bookService: BookService, private store: Store) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {}
 
-  addBook(book: Book): void {
-    // if (!book.bookname) {
-    //   alert('please enter a book name!');
-    //   return;
-    // }
-    // if (!book.author) {
-    //   alert('please enter a author!');
-    //   return;
-    // }
-    // this.bookService.create(book).subscribe({
-    //   next: (res) => {
-    //     alert('Create a new book successfully.');
-    //     this.store.dispatch(BooksApiActions.addBook(book));
-    //   },
-    //   error: (e) => console.error(e),
-    // });
+  addBook(): void {
+    if (!this.bookname) {
+      alert('please enter a book name!');
+      return;
+    }
+    if (!this.author) {
+      alert('please enter a author!');
+      return;
+    }
+
+    const book = {
+      id: '',
+      bookname: this.bookname,
+      author: this.author,
+    };
+    this.store.dispatch(addBookAction({ book }));
+    this.reset();
+  }
+
+  reset() {
+    this.bookname = '';
+    this.author = '';
   }
 }

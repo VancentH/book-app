@@ -1,7 +1,2 @@
 <app-header></app-header>
-<app-dashboard
-  (update)="onUpdate($event)"
-  (remove)="onRemove($event)"
-></app-dashboard>
-
-<!-- [books]="(books$ | async)!" -->
+<app-dashboard [books]="(books$ | async)!"></app-dashboard>
