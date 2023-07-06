@@ -1,5 +1,5 @@
-import { Book } from '../../shared/models/book';
 import { createAction, props } from '@ngrx/store';
+import { Book } from '../../shared/models/book';
 
 // CRUD operations
 export const ADD_BOOK_ACTION = '[Book] add book';

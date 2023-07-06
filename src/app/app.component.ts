@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-root',
@@ -8,11 +7,5 @@ import { Store } from '@ngrx/store';
 })
 export class AppComponent {
   constructor() {}
-
   title = 'book-app';
-  // books$ = this.store.select(selectAllBooks);
-
-  // ngOnInit() {
-  //   this.store.dispatch(loadBookListAction());
-  // }
 }

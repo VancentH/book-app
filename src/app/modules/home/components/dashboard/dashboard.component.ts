@@ -1,13 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { Store } from '@ngrx/store';
-import { Book } from '../../../../shared/models/book';
+import { AppState } from 'src/app/core/state/app.state';
 import {
-  loadBookListAction,
   deleteBookAction,
+  loadBookListAction,
   updateBookAction,
 } from '../../../../core/state/books.actions';
-import { AppState } from 'src/app/core/state/app.state';
+import { Book } from '../../../../shared/models/book';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,10 +33,6 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteBook(book: Book): void {
-    console.log(
-      '🚀 ~ file: dashboard.component.ts:49 ~ DashboardComponent ~ deleteBook ~ book:',
-      book
-    );
     if (confirm(`Remove book: ${book.bookname} ?`)) {
       this.store.dispatch(deleteBookAction({ id: book.id }));
     }
@@ -54,10 +50,6 @@ export class DashboardComponent implements OnInit {
   }
 
   confirmUpdate(book: Book): void {
-    console.log(
-      '🚀 ~ file: dashboard.component.ts:74 ~ DashboardComponent ~ confirmUpdate ~ book:',
-      book
-    );
     if (!book.bookname) {
       alert('Book name must not be empty.');
       return;
